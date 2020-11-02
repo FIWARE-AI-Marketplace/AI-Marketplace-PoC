@@ -196,7 +196,36 @@ repositories
 -   [Installation & Administration Guide](doc/installation-administration-guide.rst)
 
 You can also find this documentation on
-[ReadTheDocs](http://business-api-ecosystem.readthedocs.io)
+[ReadTheDocs](http://fiware-ai-marketplace-poc.readthedocs.io)
+
+
+### Building documentation locally
+
+Assuming that `Python3` and `pip3` are installed, you first need to install the
+following modules:
+```shell
+pip3 install sphinx recommonmark sphinx_rtd_theme
+```
+
+Now enter the documentation directory and run the build command specifying the
+output directory. Per default it will generate HTML output.
+```shell
+cd doc/
+sphinx-build . _build
+```
+
+To view the locally built documentation, either open the ``_build/index.html` file
+in your browser, or start a local HTTP server:
+```shell
+cd _build/
+python3 -m http.server
+```
+The documentation will then be accesible on [http://localhost:8000](http://localhost:8000).
+
+
+
+
+
 
 ## Quality Assurance
 
