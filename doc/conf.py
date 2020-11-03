@@ -5,7 +5,7 @@ from recommonmark.parser import CommonMarkParser
 
 on_rtd = os.environ.get('READTHEDOCS', None) == 'True'
 
-extensions = []
+extensions = ['sphinx.ext.autosectionlabel']
 templates_path = ['/home/docs/checkouts/readthedocs.org/readthedocs/templates/sphinx', 'templates', '_templates', '.templates']
 source_suffix = ['.rst', '.md']		
 source_parsers = {		

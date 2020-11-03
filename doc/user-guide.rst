@@ -2,6 +2,19 @@
 User Guide
 ==========
 
+.. note::
+   This document needs to be adapted for the AI Marketplace PoC.
+
+   Change seller and consumer guides in the case of providing and acquiring/consuming AI and data services
+
+   * Change screenshots
+   * Describe form fields of new asset types (plugins/blueprints)
+   * Add extra information in e.g. a text box about "what happens in background"
+     (e.g., after consumer acquires access to AI service, what interactions is the plugin involved
+     with the AI service, IDM and consumer application/context broker? etc.)
+     
+
+
 This user guide contains a description of the different tasks that can be performed in the Business API Ecosystem using
 its web interface. This section is organized so the actions related to a particular user role are grouped together.
 

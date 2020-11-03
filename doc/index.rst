@@ -7,6 +7,30 @@ Overview
 .. figure:: https://img.shields.io/badge/tag-fiware-orange.svg?logo=stackoverflow
   :target: http://stackoverflow.com/questions/tagged/fiware
 
+	   
+.. note::
+   This is the **TODO** list for this document and this section.
+
+   * Adapt :ref:`Overview`: Add few sentences about the PoC and differences to the standard FIWARE Marketplace, especially as AI-Marketplace
+   * Add content to :ref:`PoC introduction chapter<Proof of concept>`:
+     
+      * Introduction to the PoC/showcase (Offering, acquisition and consumption of AI service), brief introduction of the 3 parties involved
+      * Description of use case(s)
+      * Technical and architectural overview
+      * AI service description
+       
+   * Add content to :ref:`Architecture Blueprints chapter<Architecture Blueprints>`:
+
+      * Concepts about blueprints, asset types and marketplace plugins
+      * Description of implemented blueprints
+      * Information about plugin impleentation
+       
+   * Modify :ref:`User Guide` for specific use cases (blueprints):
+
+      * Change screenshots, describe new form fields
+      * Add specific section/box explaining in detail what happens in the background (mostly in the backend plugin)
+
+     
 This project is part of `FIWARE <https://www.fiware.org>`__ and has been made in collaboration with the `TM Forum <https://www.tmforum.org>`__.
 
 The Business API Ecosystem is a joint component made up of the FIWARE Business Framework and a set of APIs (and its
@@ -37,6 +61,10 @@ typos or things you think should be included but aren't. Please send them to the
 Index
 =====
 
+:doc:`poc-introduction`
+  Information about this proof-of-concept, the covered use cases, a technical overview and
+  details about the AI Service used in this PoC.
+
 :doc:`installation-administration-guide`
   The guide for maintainers that explains how to install it.
 
@@ -45,6 +73,11 @@ Index
 
 :doc:`configuration-guide`
   The guide for administrations which explains the different configuration options
+
+:doc:`blueprints-guide`
+  Details about the concept of architecture blueprints, asset types and plugins. Information
+  about the blueprints covered in this PoC and implementation of the corresponding
+  plugins.
 
 :doc:`user-guide`
   The guide for users that explains how to use it.
@@ -61,9 +94,12 @@ Index
     :maxdepth: 2
     :caption: Documentation
 
+    self
+    poc-introduction
     installation-administration-guide
     docker-guide
     configuration-guide
+    blueprints-guide
     user-guide
     programmer-guide
     plugins-guide
