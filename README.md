@@ -7,7 +7,8 @@
 <br>
 [![Documentation badge](https://img.shields.io/readthedocs/fiware-ai-marketplace-poc.svg)](https://fiware-ai-marketplace-poc.rtfd.io)
 
- | :books: [Documentation](https://fiware-ai-marketplace-poc.rtfd.io/)  | 
+ | :books: [Documentation](https://fiware-ai-marketplace-poc.rtfd.io/)  |---|---|---|
+|---|---|---|---|
 
 This repository contains information about a proof-of-concept for the AI Marketplace project. Provided are the documentation,
 scripts for deployment and implementations of the required plugins.
@@ -35,8 +36,9 @@ This project is part of [FIWARE](https://www.fiware.org/). For more information
 check the FIWARE Catalogue entry for
 [Data Publication and Monetization](https://github.com/Fiware/catalogue/tree/master/data-publication).
 
- | :books: [Documentation](https://business-api-ecosystem.rtfd.io/)  | :mortar_board: [Academy](https://fiware-academy.readthedocs.io/en/latest/data-publication/business-api) 
+| :books: [Documentation](https://business-api-ecosystem.rtfd.io/)  | :mortar_board: [Academy](https://fiware-academy.readthedocs.io/en/latest/data-publication/business-api) | :whale: [Docker Hub](https://hub.docker.com/r/fiware/business-api-ecosystem) |  :dart: [Roadmap](https://github.com/FIWARE-TMForum/Business-API-Ecosystem/blob/master/roadmap.md)|
 |---|---|---|---|
+
 
 ### Contents
 
