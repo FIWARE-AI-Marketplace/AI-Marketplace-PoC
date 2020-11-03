@@ -284,7 +284,7 @@ cd doc/
 sphinx-build . _build
 ```
 
-To view the locally built documentation, either open the ``_build/index.html` file
+To view the locally built documentation, either open the `_build/index.html` file
 in your browser, or start a local HTTP server:
 ```shell
 cd _build/
