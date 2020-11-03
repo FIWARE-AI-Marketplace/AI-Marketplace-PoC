@@ -22,6 +22,7 @@ Information about the covered use case
 
 * Description of the covered use cases and the single steps involved.
 * Story 1: Consumer activates AI service via marketplace, AI service is already available with a pre-trained model, marketplace notifies AI service about prediction endpoint, subscription to context broker about prediction results, consumer sends updates on current animal state, consumer gets prediction results
+* Story 2 (optional): Provider and Consumer process for a data service
 * Description should be provided for the 3 different views of involved parties: marketplace, AI service and consumer.
 
 
@@ -37,7 +38,9 @@ Overview of the technical infrastructure splitted into 3 environments: Marketpla
 * AI service: Spark cluster (+ data storage), cosmos connector, PEP
 * Marketplace: Standard FIWARE marketplace (business API eco system), API security (keyrock + umbrella service), provisioning of activated AI service
 * Consumer: Dashboard application for viewing prediction results, Context Broker for subscribing to prediction results, PEP
- 
+
+
+* (Optional) Add details when providing a data service
 
 
 

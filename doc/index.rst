@@ -9,7 +9,8 @@ Overview
 
 	   
 .. note::
-   This is the **TODO** list for this document and this section.
+   This is the **TODO** list for the whole documentation and this section. Every chapter where content
+   needs to be changed or added contains such a blue box!
 
    * Adapt :ref:`Overview`: Add few sentences about the PoC and differences to the standard FIWARE Marketplace, especially as AI-Marketplace
    * Add content to :ref:`PoC introduction chapter<Proof of concept>`:

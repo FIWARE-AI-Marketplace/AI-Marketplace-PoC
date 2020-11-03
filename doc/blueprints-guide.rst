@@ -19,7 +19,7 @@ Architecture blueprints in the AI Marketplace
 
 * Description of "Base Spark on Digital Twins" blueprint, assign PoC architecture components to blueprint
 
-* Maybe: describe additional blueprint for data provider service
+* (Optional) Describe additional blueprint for data provider service
 
 
 

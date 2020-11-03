@@ -9,9 +9,16 @@ User Guide
 
    * Change screenshots
    * Describe form fields of new asset types (plugins/blueprints)
-   * Add extra information in e.g. a text box about "what happens in background"
-     (e.g., after consumer acquires access to AI service, what interactions is the plugin involved
-     with the AI service, IDM and consumer application/context broker? etc.)
+   * Add extra information in e.g. text boxes about "what happens in background":
+
+      * When a provider creates a product specification
+      * When a provider creates an offering
+      * When a consumer acquires access to an AI service
+      * e.g., after consumer acquires access to AI service, what are the interactions the plugin is involved
+        with the AI service, IDM and consumer application/context broker? etc.).
+
+   * Add additional section to consumer user guide, giving details about "consuming" the AI service
+   * Later on, give details to the consumer PoC application incl. dashboard
      
 
 
