@@ -60,6 +60,7 @@ The FIWARE Marketplace, The AI Service as well as the consumer application all c
 AI-Service Environment
 ----------------------
 * AI service: Spark cluster (+ data storage), cosmos connector, PEP
+
 .. note::
    * What is the difference between what should be described here and in the following section AI-Service?
    * Completion of this subsection after AI Service is available

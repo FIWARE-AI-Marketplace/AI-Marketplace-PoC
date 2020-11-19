@@ -25,38 +25,8 @@ Architecture blueprints in the AI Marketplace (blueprint per asset type)
 * Description of blueprint for data provider service (basic files)
 * Description of blueprint for NGSI-LD data resources (mapping to query on Context Broker)
 
-Examples of blueprints:
------------------------
-
-“Base Spark on Digital Twins”:
-A Spark Cluster with the necessary ML extensions
-Exchange of digital twin data via NGSI-LD Context Broker
-API Management framework based on Keycloack
-Tools for uploading initial data
-“Trusted Spark on Digital Twins”:
-“Base Spark on Digital Twins” blueprint modules
-IDS Connecto
-
-An example of AI/ML platform blue print (let's call it "Basic Spark-based" blueprint) will be one based on the integration of:
-* A Spark Cluster with the necessary ML extensions supporting the execution of AI/ML algorithms
-* A Context Broker, providing the means for requesting and getting predictions ("tell me what is the time until next breakdown of this machine") as well as injecting right-time data from different sources (e.g., measurements from different sensors connected to the machine, or measurements provided by CMM machines measuring the quality of parts produced by the Milling Machine)
-* Tools for uploading big data sets (e.g., for initiating the training)
-* A  Security and API Management framework which allows to secure access to, and usage of, the NGSI-LD API that the Context Broker provides by consuming applications
-* etc
- 
-The "Trusted Spark-based" blueprint which may be a blueprint that is based on the integration of:
-* A Spark Cluster with the necessary ML extensions supporting the execution of AI/ML algorithms
-* A Context Broker, providing the means for requesting and getting predictions ("tell me what is the time until next breakdown of this machine") as well as injecting right-time data from different sources (e.g., measurements from different sensors connected to the machine, or measurements provided by CMM machines measuring the quality of parts produced by the Milling Machine)
-* Tools for uploading big data sets (e.g., for initiating the training)
-* A  Security and API Management framework which allows to secure access to, and usage of, the NGSI-LD API that the Context Broker provides by consuming applications
-* An IDS Connector within which all the previous components will be deployed and which will provided additional access and usage control
-* etc 
 
 Recipes (Kubernetes recipes recommended at this point) for provisioning each of the KI-Marktplatz compatible platform reference architectures on whatever premises or existing public clouds should be provided.  Thus, an AI/ML service provider who wishes to develop a service called "X" for Predictive Maintenance of Milling Machines may opt for adhering to the "Basic Spark-based" AI/ML Platform blueprint.  Therefore, using the Kubernetes recipes associated to that blueprint, it would provision the platform on top of which it will run its AI/ML service "X".  
-
-
-
-* (Optional) Describe additional blueprint for file data provider service
 
 
 
@@ -66,6 +36,22 @@ Base Spark on Digital Twins
 * Description of the "Base Spark on Digital Twins" blueprint
 * Example of predicting weights of animals
 
+A Spark Cluster with the necessary ML extensions
+Exchange of digital twin data via NGSI-LD Context Broker
+API Management framework based on Keycloack
+Tools for uploading initial data
+“Trusted Spark on Digital Twins”:
+“Base Spark on Digital Twins” blueprint modules
+IDS Connector
+
+An example of AI/ML platform blue print (let's call it "Basic Spark-based" blueprint) will be one based on the integration of:
+* A Spark Cluster with the necessary ML extensions supporting the execution of AI/ML algorithms
+* A Context Broker, providing the means for requesting and getting predictions ("tell me what is the time until next breakdown of this machine") as well as injecting right-time data from different sources (e.g., measurements from different sensors connected to the machine, or measurements provided by CMM machines measuring the quality of parts produced by the Milling Machine)
+* Tools for uploading big data sets (e.g., for initiating the training)
+* A  Security and API Management framework which allows to secure access to, and usage of, the NGSI-LD API that the Context Broker provides by consuming applications
+* etc
+
+  
 Overview of target architecture between AI consumer and AI Service:
 
 .. image:: ./images/blueprints/FW-Marketplace-Consumer-Provider.png
@@ -227,7 +213,34 @@ The updated prediction results can be viewed on the AI Consumer dashboard applic
 * Open: Define processes for usage accounting
   
 
-  
+
+Trusted Spark-based blueprint
+******************************
+
+The "Trusted Spark-based" blueprint which may be a blueprint that is based on the integration of:
+* A Spark Cluster with the necessary ML extensions supporting the execution of AI/ML algorithms
+* A Context Broker, providing the means for requesting and getting predictions ("tell me what is the time until next breakdown of this machine") as well as injecting right-time data from different sources (e.g., measurements from different sensors connected to the machine, or measurements provided by CMM machines measuring the quality of parts produced by the Milling Machine)
+* Tools for uploading big data sets (e.g., for initiating the training)
+* A  Security and API Management framework which allows to secure access to, and usage of, the NGSI-LD API that the Context Broker provides by consuming applications
+* An IDS Connector within which all the previous components will be deployed and which will provided additional access and usage control
+* etc 
+
+
+
+
+Data Provider Service Blueprint (basic files)
+**********************************************
+
+TODO
+
+
+
+
+NGSI-LD data resources Blueprint (mapping to query on Context Broker)
+***********************************************************************
+
+TODO
+
   
 
 ---------------------------
