@@ -14,10 +14,11 @@ User Guide
       * When a provider creates a product specification
       * When a provider creates an offering
       * When a consumer acquires access to an AI service
-      * e.g., after consumer acquires access to AI service, what are the interactions the plugin is involved
-        with the AI service, IDM and consumer application/context broker? etc.).
+      * e.g., after consumer acquires access to AI service, what are the interactions the plugin is involved with the AI service, IDM and consumer application/context broker? etc.).
+      * Suggestion: Create different sections for each of the above points depending on the type of asset (data set or AI service)
 
    * Add additional section to consumer user guide, giving details about "consuming" the AI service
+      * In the current user guide, a section about the customer exists. Isn't that the same as the consumer?
    * Later on, give details to the consumer PoC application incl. dashboard
      
 
@@ -558,6 +559,18 @@ It is also possible to update the *Price Plans* and *Categories* of the offering
    :align: center
    :scale: 50%
 
+Background: What happens in the AI Service offering?
+----------------------------------------------------
+  Creation of the AI service offerig seen in the image ssen below consists of the following steps: 
+   * The AI service provider registers the offering in the AI Marketplace Portal (Store)
+   * This means declaring:
+      a) data model supported
+      b) terms and conditions
+      c) associated architecture blueprint
+
+.. image:: ./images/diagrams/AIserviceoffering.png
+   :align: center
+
 
 Manage Revenue Sharing Models
 -----------------------------
@@ -862,6 +875,28 @@ In the next step, you will be redirected to *PayPal* so you can pay for the offe
 Finally, you will see a confirmation page
 
 .. image:: ./images/user/order9.png
+   :align: center
+
+Background: Acquisition and Usage of AI Serivce
+-----------------------------------------------
+Acquiring usage rights and provisioning the AI service as seen in the image ssen below consists of the following steps: 
+
+   * A service consumer finds the AI service in the AI Marketplace Portal (Store) and acquires usage rights
+   * This means signaling the AI service provider that resources may need to be provisioned
+   * Also creation of log
+
+
+.. image:: ./images/diagrams/AcquiringUsageRights.png
+   :align: center
+
+.. image:: ./images/diagrams/AcquiringUsageRights2.png
+   :align: center
+
+Activation and usage of the AI service:
+   * The user activates the AI service using tools provided by the AI service provider
+   * In this use-case, provides endpoint to Context Broker in farm management system 
+
+.. image:: ./images/diagrams/ServiceActivation.png
    :align: center
 
 Manage Acquired Products
