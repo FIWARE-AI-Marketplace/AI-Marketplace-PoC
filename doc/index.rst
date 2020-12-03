@@ -19,7 +19,9 @@ Overview
       * Description of use case(s)
       * Technical and architectural overview
       * AI service description
-       
+
+   * Add content to :ref:`Kubernetes Deployment Guide chapter<Kubernetes Deployment Guide>`:
+	
    * Add content to :ref:`Architecture Blueprints chapter<Architecture Blueprints>`:
 
       * Concepts about blueprints, asset types and marketplace plugins
@@ -72,6 +74,9 @@ Index
 :doc:`docker-guide`
   The guide for maintainers that explains how to use Docker for deploying it
 
+:doc:`kubernetes-deployment-guide`
+  The guide for maintainers that explains how to use Kubernetes and Helm for deploying it
+     
 :doc:`configuration-guide`
   The guide for administrations which explains the different configuration options
 
@@ -99,6 +104,7 @@ Index
     poc-introduction
     installation-administration-guide
     docker-guide
+    kubernetes-deployment-guide
     configuration-guide
     blueprints-guide
     user-guide
