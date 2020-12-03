@@ -74,7 +74,7 @@ Index
 :doc:`docker-guide`
   The guide for maintainers that explains how to use Docker for deploying it
 
-:doc:`kubernetes-deployment-guide`
+:doc:`kubernetes-guide`
   The guide for maintainers that explains how to use Kubernetes and Helm for deploying it
      
 :doc:`configuration-guide`
@@ -104,7 +104,7 @@ Index
     poc-introduction
     installation-administration-guide
     docker-guide
-    kubernetes-deployment-guide
+    kubernetes-guide
     configuration-guide
     blueprints-guide
     user-guide
