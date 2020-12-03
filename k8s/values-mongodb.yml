@@ -1,0 +1,71 @@
+# Values for bitnami/mongodb Helm Chart
+#
+# Chart values file:
+# ref: https://github.com/bitnami/charts/blob/master/bitnami/mongodb/values.yaml
+#
+
+image:
+  ## Bitnami MongoDB image name
+  ##
+  repository: bitnami/mongodb
+  ## Bitnami MongoDB image tag
+  ## ref: https://hub.docker.com/r/bitnami/mongodb/tags/
+  ##
+  tag: 3.6.21
+  
+## MongoDB architecture. Allowed values: standalone or replicaset
+##
+architecture: standalone
+
+## Use StatefulSet instead of Deployment when deploying standalone
+##
+useStatefulSet: false
+
+## MongoDB Authentication parameters
+##
+auth:
+  ## Enable authentication
+  ## ref: https://docs.mongodb.com/manual/tutorial/enable-authentication/
+  ##
+  enabled: true
+  ## MongoDB root password
+  ## ref: https://github.com/bitnami/bitnami-docker-mongodb/blob/master/README.md#setting-the-root-password-on-first-run
+  ##
+  rootPassword: mongodb-root-password
+
+## initdb scripts
+## Specify dictionary of scripts to be run at first boot
+##
+## This creates the required databases and users for the charging backend
+## end logic proxy (belp). Make sure to set these DB user configurations and
+## databases for the corresponding components.
+##
+initdbScripts:
+  init_db.js: |
+    // Setup charging DB
+    db = db.getSiblingDB('charging_db');
+    db.createUser(
+    {
+      user: "charging",
+      pwd: "charging-password",
+      roles: [
+        {
+          role: "readWrite",
+          db: "charging_db"
+        }
+      ]
+    });
+    // Setup proxy DB
+    db = db.getSiblingDB('belp_db');
+    db.createUser(
+    {
+      user: "belp",
+      pwd: "belp-password",
+      roles: [
+        {
+          role: "readWrite",
+          db: "belp_db"
+        }
+      ]
+    });
+

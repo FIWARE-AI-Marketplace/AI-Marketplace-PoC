@@ -1,0 +1,88 @@
+# Values for fiware/business-api-ecosystem Helm Chart
+#
+# Chart values file:
+# ref: 
+#
+
+
+## Marketplace OAuth and IdM configuration
+##
+oauth:
+  # URL of the FIWARE IDM used for user authentication
+  # Should match the host of the Ingress or Route of the Keyrock instance
+  server: https://keyrock.domain.org
+  # OAuth2 Client ID of the BAE applicaiton
+  clientId: client-id
+  # OAuth2 Client Secret of the BAE application
+  clientSecret: client-secret
+  
+
+## External URL used to access the BAE frontend (logic proxy)
+## Should match the host of the Ingress or Route of the Logic Proxy
+##
+externalUrl: https://marketplace.domain.org
+
+
+## Configuration for biz-ecosystem-apis component
+##
+bizEcosystemApis:
+  ## database configuration for APIs (MySQL)
+  db:
+    ## host of the database to be used (K8s internal service hostname)
+    host: mysql.marketplace.svc.cluster.local
+    ## password for connecting the database (MySQL root password)
+    password: mysql-root-password
+
+    
+## Configuration for biz-ecosystem-rss component
+##
+bizEcosystemRss:
+  ## database configuration for RSS (MySQL)
+  db:
+    ## host of the database to be used (K8s internal service hostname)
+    host: mysql.marketplace.svc.cluster.local
+    ## URL connection string of the database to be used (leave the port and DB name RSS unchanged)
+    url: jdbc:mysql://mysql.marketplace.svc.cluster.local:3306/RSS
+    ## password for connecting the database (MySQL root password)
+    password: mysql-root-password
+
+
+## Configuration for biz-ecosystem-charging-backend component
+##
+bizEcosystemChargingBackend:
+  ## database configuration for Charging backend (MongoDB)
+  db:
+    ## host of the database to be used (K8s internal service hostname)
+    host: mongodb.marketplace.svc.cluster.local
+    ## Database name for connecting the database
+    database: charging_db
+    ## username for connecting the database
+    user: charging
+    ## password for connecting the database (MongoDB password of user charging)
+    password: charging-password
+
+
+## Configuration for biz-ecosystem-logic-proxy component
+##
+bizEcosystemLogicProxy:
+  ## Set either an ingress or openshift route for making the Marketplace UI externally available
+  ##
+  ## openshift specific route definition. Will not work on plain k8s
+  route:
+    ## -- should the deployment create openshift routes
+    enabled: false
+  ## ingress configuration
+  ingress:
+    ## -- should there be an ingress to connect the logic proxy with the public internet
+    enabled: false
+
+  ## database configuration for Logic Proxy (MongoDB)
+  db:
+    # host of the database to be used (K8s internal service hostname)
+    host: mongodb.marketplace.svc.cluster.local
+    # Database name for connecting the database
+    database: belp_db
+    # username for connecting the database
+    user: belp
+    # password for connecting the database (MongoDB password of user charging)
+    password: belp-password
