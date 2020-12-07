@@ -26,7 +26,8 @@ Preparation
 
 Prepare Helm repositories ::
 
-	helm repo add elastic https://helm.elastic.co
+	helm repo add t3n https://storage.googleapis.com/t3n-helm-charts
+        helm repo add bitnami https://charts.bitnami.com/bitnami
 	helm repo add fiware https://fiware.github.io/helm-charts/
 	helm repo update
 
