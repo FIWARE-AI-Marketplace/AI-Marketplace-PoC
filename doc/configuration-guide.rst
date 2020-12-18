@@ -430,28 +430,386 @@ customers in the web portal. They can be configured with environment variables w
 Configuring Themes
 ------------------
 
-The Business API Ecosystem provides a basic mechanism for the creation of themes intended to customize the web portal
-of the system. Themes include a set of files which can override any of the default portal files located in the *public/resources*
-or *views* directories of the logic proxy. To do that, themes map the directory structure and include files with the same
-name of the default ones to be overridden.
+The Business API Ecosystem provides a basic mechanism for the creation of themes intended to customize the web portal of the system. Themes include a set of files which can override any of the default portal files located in the *public/resources*
+or *views* directories of the logic proxy. To do that, themes map the directory structure and include files with the same name of the default ones to be overridden.
 
-The Logic Proxy can include multiple themes which should be stored in the *themes* directory located at the root of the
-project.
+To customize the theme of the Business API Ecosystem, the software to look at is the `Business API Ecosystem Logic Proxy <https://github.com/FIWARE-TMForum/business-ecosystem-logic-proxy>`_. 
+There is a defined mechanism for creating themes. The themes are created as a separate package; you can select a name for it and then you provide the different contents and the particular theme to be used. This theme can be configured in the main settings of the business ecosystem, in particular in the config.js file in the theme section. The name of the folder containing the theme has to be specified there. 
 
-To enable themes, the *config.theme* setting is provided within the *config.js* file of the Logic Proxy. Themes are
-enabled by providing the name of the theme directory in this setting. ::
+.. image:: ./images/diagrams/themedoc1.png
+   :align: center
 
-    config.theme = 'dark-theme';
+Since we are using Docker, the alternative is to precise the theme folder in the environment variable in the docker-compose.yml file as in the last line of the following image:
+
+.. image:: ./images/diagrams/themedoc2.png
+   :align: center
+
+Firstly, the BAE instance needs to be run in developer mode so that we can make changes; a docker dev folder enables that. In this docker dev folder we can find the docker-compose.yml file that has the proxy service which is the container of the marketplace front end. 
+The idea of the theme is that we have to provide a folder that maps the same structure of the Business API Ecosystem structure as seen in the image: 
+
+.. image:: ./images/diagrams/themedoc3.png
+   :align: center
+   :scale: 40%
+
+Running the Business API Ecosystem Logic Proxy Dev Docker Instance
+------------------------------------------------------------------
+
+This directory includes a Dockerfile and a docker-compose.yml file that enables having a container runtime providing virtualization on the OS level, with all the software dependencies installed, for developing over the business-ecosystem-logic-proxy software.
+In our case we will run each container by itself. Since some services take time to execute and since there is a dependency of a service on another, it is better to run it separately so that we make sure it is done properly. If we run the docker compose file with all the services it will create all containers at the same time without taking into account the time each container needs to be completed and the right synchronisation.  
+
+We will create for each service a docker-compose.yml file and we have to follow the following order: **db, apis, rss, charging, proxy**.
+
+Databases container
++++++++++++++++++++
+
+We will create a folder called **db** in which we create a docker-compose.yml file and we can copy the following code in it: ::
+
+    version: '3'
+    services:
+      elasticsearch:
+        image: docker.elastic.co/elasticsearch/elasticsearch:7.5.0
+        environment:
+          - 'node.name=BAE'
+          - 'discovery.type=single-node'
+          - 'ES_JAVA_OPTS=-Xms256m -Xmx256m'
+        ports:
+          - "127.0.0.1:9200:9200"
+        networks:
+          main:
+            aliases:
+              - elastic.docker
+
+      mongo:
+        image: mongo:3.2
+        ports:
+          - 27017:27017
+        networks:
+          main:
+        volumes:
+          - ./proxy-data:/data/db
+
+      mysql:
+        image: mysql:5.7
+        #restart: always
+        volumes:
+          - ./mysql-data:/var/lib/mysql
+        networks:
+          main:
+        environment:
+          - MYSQL_ROOT_PASSWORD=my-secret-pw      
+
+    networks:
+      main:
+        external: true
+
+
+APIs container 
+++++++++++++++
+
+We will create a folder called **apis** in which we create a docker-compose.yml file and we can copy the following code in it: ::
+
+    version: '3'
+    services:
+      apis:
+          image: fiware/biz-ecosystem-apis:v7.6.0
+          #restart: always
+          ports:
+            - 4848:4848
+            - 8080:8080
+          networks:
+            main:
+              aliases:
+                - apis.docker
+          # volumes:
+          #    - ./apis-conf:/etc/default/tmf/  # Used if not configured by environment
+          environment:
+            - BAE_SERVICE_HOST=http://proxy.docker:8004/
+            - MYSQL_ROOT_PASSWORD=my-secret-pw
+            - MYSQL_HOST=mysql
+
+    networks:
+      main:
+        external: true
+
+RSS (revenue sharing system) container
+++++++++++++++++++++++++++++++++++++++
+
+We will create a folder called rss in which we create a docker-compose.yml file and we can copy the following code in it: ::
+
+    version: '3'
+    services:
+      rss:
+          image: fiware/biz-ecosystem-rss:v7.8.0
+          #restart: always
+          ports:
+            - 9999:8081
+            - 4444:4848
+            - 1111:8181
+          
+          networks:
+            main:
+              aliases:
+                - rss.docker
+          # volumes:
+          #    - ./rss-conf:/etc/default/rss  # Used if not configured by environment
+          environment:
+            - BAE_RSS_DATABASE_URL=jdbc:mysql://mysql:3306/RSS
+            - BAE_RSS_DATABASE_USERNAME=root
+            - BAE_RSS_DATABASE_PASSWORD=my-secret-pw
+            - BAE_RSS_DATABASE_DRIVERCLASSNAME=com.mysql.jdbc.Driver
+            - BAE_RSS_OAUTH_CONFIG_GRANTEDROLE=admin
+            - BAE_RSS_OAUTH_CONFIG_SELLERROLE=seller
+            - BAE_RSS_OAUTH_CONFIG_AGGREGATORROLE=Aggregator
+
+    networks:
+      main:
+        external: true
+
+Charging backend container
+++++++++++++++++++++++++++
+
+We will create a folder called charging in which we create a docker-compose.yml file and we can copy the following code in it: ::
+
+    version: '3'
+    services:
+      charging:
+          image: fiware/biz-ecosystem-charging-backend:v7.8.0
+          networks:
+            main:
+              aliases:
+                - charging.docker
+          ports:
+            - 8006:8006
+          volumes:
+            # - ./charging-settings:/business-ecosystem-charging-backend/src/user_settings  # Used if the settings files are provided through the volume
+            - ./charging-bills:/business-ecosystem-charging-backend/src/media/bills
+            - ./charging-assets:/business-ecosystem-charging-backend/src/media/assets
+            - ./charging-plugins:/business-ecosystem-charging-backend/src/plugins
+            - ./charging-inst-plugins:/business-ecosystem-charging-backend/src/wstore/asset_manager/resource_plugins/plugins
+          environment:
+            - BAE_CB_PAYMENT_METHOD=None # paypal or None (testing mode payment disconected)
+            # - BAE_CB_PAYPAL_CLIENT_ID=client_id
+            # - BAE_CB_PAYPAL_CLIENT_SECRET=client_secret
+
+            # ----- Database configuration ------
+            - BAE_CB_MONGO_SERVER=mongo
+            - BAE_CB_MONGO_PORT=27017
+            - BAE_CB_MONGO_DB=charging_db
+            # - BAE_CB_MONGO_USER=user
+            # - BAE_CB_MONGO_PASS=passwd
+
+            # ----- Roles Configuration -----
+            - BAE_LP_OAUTH2_ADMIN_ROLE=admin
+            - BAE_LP_OAUTH2_SELLER_ROLE=seller
+            - BAE_LP_OAUTH2_CUSTOMER_ROLE=customer
+
+            # ----- Email configuration ------
+            - BAE_CB_EMAIL=charging@email.com
+            # - BAE_CB_EMAIL_USER=user
+            # - BAE_CB_EMAIL_PASS=pass
+            # - BAE_CB_EMAIL_SMTP_SERVER=smtp.server.com
+            # - BAE_CB_EMAIL_SMTP_PORT=587
+
+            - BAE_CB_VERIFY_REQUESTS=True # Whether or not the BAE validates SSL certificates on requests to external components
+
+            # ----- Site configuration -----
+            - BAE_SERVICE_HOST=http://proxy.docker:8004/ # External URL used to access the BAE
+            - BAE_CB_LOCAL_SITE=http://charging.docker:8006/ # Local URL of the charging backend
+
+            # ----- APIs Connection config -----
+            - BAE_CB_CATALOG=http://apis.docker:8080/DSProductCatalog
+            - BAE_CB_INVENTORY=http://apis.docker:8080/DSProductInventory
+            - BAE_CB_ORDERING=http://apis.docker:8080/DSProductOrdering
+            - BAE_CB_BILLING=http://apis.docker:8080/DSBillingManagement
+            - BAE_CB_RSS=http://rss.docker:8080/DSRevenueSharing
+            - BAE_CB_USAGE=http://apis.docker:8080/DSUsageManagement
+            - BAE_CB_AUTHORIZE_SERVICE=http://proxy.docker:8004/authorizeService/apiKeys
+
+    networks:
+      main:
+        external: true
+
+We should finally get something like this: 
+
+.. image:: ./images/diagrams/themedoc4.png
+   :align: center
+
+To run the containers listed above we have to write these commands in the terminal and we have to repeat this for each folder (except for the proxy which will be handled later): ::
+
+    $ cd <name of the container folder>
+    $ docker compose up -d 
+ 
+
+
+Proxy container
++++++++++++++++
+
+We will keep the same code structure provided under this link so we only need to clone it and the only thing we will change is the docker-compose.yml file under the docker-dev folder and you can copy the following code in it:  ::
+
+    version: '3'
+    services:
+      proxy:
+          image: fiware/biz-ecosystem-logic-proxy
+          ports:
+            - 8004:8004
+          networks:
+            main:
+              aliases:
+                - proxy.docker
+          volumes:
+            - ./proxy-indexes:/business-ecosystem-logic-proxy/indexes
+            - ./proxy-themes:/business-ecosystem-logic-proxy/themes
+            - ./proxy-static:/business-ecosystem-logic-proxy/static
+            - ./proxy-locales:/business-ecosystem-logic-proxy/locales
+
+          environment:
+                # ------ OAUTH2 Config ------
+                - BAE_LP_OAUTH2_SERVER=https://marketplace-accounts.fiware.io  # URL of the FIWARE IDM used for user authentication
+                - BAE_LP_OAUTH2_CLIENT_ID=07e5f09b-4a65-41c4-a987-5ef850b5ea32  # OAuth2 Client ID of the BAE applicaiton
+                - BAE_LP_OAUTH2_CALLBACK=http://localhost:8004/auth/fiware/callback  # Callback URL for receiving the access tokens
+                - BAE_LP_OAUTH2_ADMIN_ROLE=admin  # Role defined in the IDM client app for admins of the BAE 
+                - BAE_LP_OAUTH2_SELLER_ROLE=seller  # Role defined in the IDM client app for sellers of the BAE 
+                - BAE_LP_OAUTH2_CUSTOMER_ROLE=customer  # Role defined in the IDM client app for customers of the BAE 
+                - BAE_LP_OAUTH2_ORG_ADMIN_ROLE=orgAdmin  # Role defined in the IDM client app for organization admins of the BAE 
+                - BAE_LP_OAUTH2_IS_LEGACY=false  # Whether the used FIWARE IDM is version 6 or lower
+                - BAE_LP_THEME=i4trust
+                - COLLECT=True
+    networks:
+      main:
+        external: true
+
+Then what has to be done is to run the proxy container following these commands in the terminal: ::
+
+    $ cd docker-dev 
+    $ docker-compose up 
+ 
+To have an overview of the running containers, install `Docker Desktop <https://www.docker.com/products/docker-desktop>`_.
+This is what we should get when we check Docker Dashboard: 
+
+.. image:: ./images/diagrams/themedoc5.png
+   :align: center
+   :scale: 110%
+
+Additional information
+++++++++++++++++++++++
+
+You can stop the containers with the following command: ::
+
+    docker-compose stop
+
+
+And start them again with: ::
+
+    docker-compose start
+
+
+Moreover, you can terminate the containers with: ::
+
+    docker-compose down
+
+In addition, the docker-compose is going to create a volume over the main folder of the sources, so you can modify, test or execute the software inside the container. 
+To access to the container execute the following command: ::
+
+    docker exec -ti dockerdev_proxy_1 /bin/bash
+
+
+At this point we will run the server manually following this command: ::
+
+    >>> node server.js 
+
+Configuring the Theme
+---------------------
+
+Link to the Github repo of a theme example can be found `here <https://github.com/FIWARE-AI-Marketplace/bae-i4trust-theme>`_.
+
+The following picture shows the Look and feel of the new theme: 
+
+.. image:: ./images/diagrams/themedoc6.png
+   :align: center
+
+Now we will create our theme folder following the same structure that maps the bae-proxy structure:
+
+.. image:: ./images/diagrams/themedoc7.png
+   :align: center
+
+Creating a new css file
++++++++++++++++++++++++
+If we want to make some changes in the theme related to the graphical chart this would require creating a new css file with the wanted style. So by default what is running currently is the default-theme.css and what we have to do is to create a new css file following this structure:
+
+**proxy-themes/<name of new theme folder>/public/resources/core/<new css file>.css**
+
+PS: we can copy the code from the default-theme.css and edit it. 
+
+To apply the new css file we need to override the **imports.js** file and change the path to the new-theme in the **cssFilesToInject**.
+
+.. image:: ./images/diagrams/themedoc8.png
+   :align: center
+
+Changing the logo
++++++++++++++++++
+To change the logo we can do the following: 
+The file we have to look at is the **base.jade** so as we did previously since we will change this file we will copy it in the theme folder that we created and as always keeping the same structure of the file that maps the bae-proxy. So we should have a structure like this: 
+
+.. image:: ./images/diagrams/themedoc9.png
+   :align: center
 
 .. note::
-    Setting *config.theme* to an empty string makes the Business API Ecosystem to use its default theme
+   The logo image must be uploaded under public>resources>core>images
 
-To start using a theme the following command has to be executed: ::
+Changing the browser's title bar
+++++++++++++++++++++++++++++++++
 
-    $ node collect_static.js
+To change the browser’s title bar the file we have to look at is the **base.jade**
 
-This command merges the theme files and the default ones into a *static* directory used by the Logic Proxy to retrieve
-portal static files.
+.. image:: ./images/diagrams/themedoc10.png
+   :align: center
+
+Changing the font 
++++++++++++++++++
+To change the font we can download the font we want and add it under **Public > resources> <new-font-file>**. To apply the new font we need to override the **imports.js** file and change the path to the new-font in the **cssFilesToInject**.
+
+.. image:: ./images/diagrams/themedoc11.png
+   :align: center
+
+Changing the translation
+++++++++++++++++++++++++
+To add new translation languages to the Marketplace what we need to look at is the **locales** folder in which we can add the language.js or language.json  file we need that translates the strings we have in the graphical interface. 
+
+.. image:: ./images/diagrams/themedoc12.png
+   :align: center
+
+Changing the html / Javascript
+++++++++++++++++++++++++++++++
+To make changes in the **html** components of the Marketplace what we need to look at is the **views** folder which has the jade files and also if we want to change anything in the **Javascript** what we need to look at is the **public** folder. 
+So when changing in the html or the Javascript, we can just recreate a jade file or a js file in the new-theme folder and keep the same files structure that maps the bae-proxy structure. 
+
+If we not only want to replace things but add new files, we need to overwrite the imports.js folder in which we can specify the path to the new files injected.
+
+Steps to compile the new theme
+------------------------------
+When we execute the **collect_static.js** file it is going to generate a static folder which incorporates the whole compiled Marketplace that merges the created new-theme and the default theme.
+
+.. image:: ./images/diagrams/themedoc13.png
+   :align: center
+
+We can execute the collect_static.s by adding this line ::
+
+     - COLLECT=True  
+
+to the environment var in the docker-compose.yml file under the docker-dev like follows: 
+
+.. image:: ./images/diagrams/themedoc14.png
+   :align: center
+
+To be able to test the changes we make under the docker-dev we have to stop the proxy container by ::
+
+    docker-compose down 
+
+and run it again with ::
+
+    docker-compose up 
+
+The Marketplace will then be accesiblein the browser `here <http://localhost:8004/>`_.
 
 -------------------
 Enabling Production
