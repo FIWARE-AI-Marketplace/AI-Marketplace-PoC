@@ -451,18 +451,17 @@ The idea of the theme is that we have to provide a folder that maps the same str
    :align: center
    :scale: 40%
 
-Running the Business API Ecosystem Logic Proxy Dev Docker Instance
-------------------------------------------------------------------
+Running the logic proxy docker-dev instance
+-------------------------------------------
 
-This directory includes a Dockerfile and a docker-compose.yml file that enables having a container runtime providing virtualization on the OS level, with all the software dependencies installed, for developing over the business-ecosystem-logic-proxy software.
-In our case we will run each container by itself. Since some services take time to execute and since there is a dependency of a service on another, it is better to run it separately so that we make sure it is done properly. If we run the docker compose file with all the services it will create all containers at the same time without taking into account the time each container needs to be completed and the right synchronisation.  
+Step 1: running the container with docker
++++++++++++++++++++++++++++++++++++++++++
 
-We will create for each service a docker-compose.yml file and we have to follow the following order: **db, apis, rss, charging, proxy**.
+We will keep the same code structure provided under this link so first we need to clone it and the only thing we will change is the docker-compose.yml file under the docker-dev folder and you can copy the code in it. 
 
-Databases container
-+++++++++++++++++++
+The following is a docker compose file that deploys the whole system using the docker-dev image that enables development and particularly in our case make theme configuration. 
 
-We will create a folder called **db** in which we create a docker-compose.yml file and we can copy the following code in it: ::
+PS: This does not require rebuilding the image but it loads all the source files locally as volume into the container. ::
 
     version: '3'
     services:
@@ -496,226 +495,191 @@ We will create a folder called **db** in which we create a docker-compose.yml fi
         networks:
           main:
         environment:
-          - MYSQL_ROOT_PASSWORD=my-secret-pw      
+          - MYSQL_ROOT_PASSWORD=my-secret-pw
+          - MYSQL_DATABASE=RSS
 
-    networks:
-      main:
-        external: true
-
-
-APIs container 
-++++++++++++++
-
-We will create a folder called **apis** in which we create a docker-compose.yml file and we can copy the following code in it: ::
-
-    version: '3'
-    services:
-      apis:
-          image: fiware/biz-ecosystem-apis:v7.6.0
-          #restart: always
-          ports:
-            - 4848:4848
-            - 8080:8080
-          networks:
-            main:
-              aliases:
-                - apis.docker
-          # volumes:
-          #    - ./apis-conf:/etc/default/tmf/  # Used if not configured by environment
-          environment:
-            - BAE_SERVICE_HOST=http://proxy.docker:8004/
-            - MYSQL_ROOT_PASSWORD=my-secret-pw
-            - MYSQL_HOST=mysql
-
-    networks:
-      main:
-        external: true
-
-RSS (revenue sharing system) container
-++++++++++++++++++++++++++++++++++++++
-
-We will create a folder called rss in which we create a docker-compose.yml file and we can copy the following code in it: ::
-
-    version: '3'
-    services:
-      rss:
-          image: fiware/biz-ecosystem-rss:v7.8.0
-          #restart: always
-          ports:
-            - 9999:8081
-            - 4444:4848
-            - 1111:8181
-          
-          networks:
-            main:
-              aliases:
-                - rss.docker
-          # volumes:
-          #    - ./rss-conf:/etc/default/rss  # Used if not configured by environment
-          environment:
-            - BAE_RSS_DATABASE_URL=jdbc:mysql://mysql:3306/RSS
-            - BAE_RSS_DATABASE_USERNAME=root
-            - BAE_RSS_DATABASE_PASSWORD=my-secret-pw
-            - BAE_RSS_DATABASE_DRIVERCLASSNAME=com.mysql.jdbc.Driver
-            - BAE_RSS_OAUTH_CONFIG_GRANTEDROLE=admin
-            - BAE_RSS_OAUTH_CONFIG_SELLERROLE=seller
-            - BAE_RSS_OAUTH_CONFIG_AGGREGATORROLE=Aggregator
-
-    networks:
-      main:
-        external: true
-
-Charging backend container
-++++++++++++++++++++++++++
-
-We will create a folder called charging in which we create a docker-compose.yml file and we can copy the following code in it: ::
-
-    version: '3'
-    services:
       charging:
-          image: fiware/biz-ecosystem-charging-backend:v7.8.0
-          networks:
-            main:
-              aliases:
-                - charging.docker
-          ports:
-            - 8006:8006
-          volumes:
-            # - ./charging-settings:/business-ecosystem-charging-backend/src/user_settings  # Used if the settings files are provided through the volume
-            - ./charging-bills:/business-ecosystem-charging-backend/src/media/bills
-            - ./charging-assets:/business-ecosystem-charging-backend/src/media/assets
-            - ./charging-plugins:/business-ecosystem-charging-backend/src/plugins
-            - ./charging-inst-plugins:/business-ecosystem-charging-backend/src/wstore/asset_manager/resource_plugins/plugins
-          environment:
-            - BAE_CB_PAYMENT_METHOD=None # paypal or None (testing mode payment disconected)
-            # - BAE_CB_PAYPAL_CLIENT_ID=client_id
-            # - BAE_CB_PAYPAL_CLIENT_SECRET=client_secret
+        image: fiware/biz-ecosystem-charging-backend:v7.8.0
+        links:
+          - mongo
+        depends_on:
+          - mongo
+        networks:
+          main:
+            aliases:
+              - charging.docker
+        ports:
+          - 8006:8006
+        volumes:
+          # - ./charging-settings:/business-ecosystem-charging-backend/src/user_settings  # Used if the settings files are provided through the volume
+          - ./charging-bills:/business-ecosystem-charging-backend/src/media/bills
+          - ./charging-assets:/business-ecosystem-charging-backend/src/media/assets
+          - ./charging-plugins:/business-ecosystem-charging-backend/src/plugins
+          - ./charging-inst-plugins:/business-ecosystem-charging-backend/src/wstore/asset_manager/resource_plugins/plugins
+        environment:
+          - BAE_CB_PAYMENT_METHOD=None # paypal or None (testing mode payment disconected)
+          # - BAE_CB_PAYPAL_CLIENT_ID=client_id
+          # - BAE_CB_PAYPAL_CLIENT_SECRET=client_secret
 
-            # ----- Database configuration ------
-            - BAE_CB_MONGO_SERVER=mongo
-            - BAE_CB_MONGO_PORT=27017
-            - BAE_CB_MONGO_DB=charging_db
-            # - BAE_CB_MONGO_USER=user
-            # - BAE_CB_MONGO_PASS=passwd
+          # ----- Database configuration ------
+          - BAE_CB_MONGO_SERVER=mongo
+          - BAE_CB_MONGO_PORT=27017
+          - BAE_CB_MONGO_DB=charging_db
+          # - BAE_CB_MONGO_USER=user
+          # - BAE_CB_MONGO_PASS=passwd
 
-            # ----- Roles Configuration -----
-            - BAE_LP_OAUTH2_ADMIN_ROLE=admin
-            - BAE_LP_OAUTH2_SELLER_ROLE=seller
-            - BAE_LP_OAUTH2_CUSTOMER_ROLE=customer
+          # ----- Roles Configuration -----
+          - BAE_LP_OAUTH2_ADMIN_ROLE=admin
+          - BAE_LP_OAUTH2_SELLER_ROLE=seller
+          - BAE_LP_OAUTH2_CUSTOMER_ROLE=customer
 
-            # ----- Email configuration ------
-            - BAE_CB_EMAIL=charging@email.com
-            # - BAE_CB_EMAIL_USER=user
-            # - BAE_CB_EMAIL_PASS=pass
-            # - BAE_CB_EMAIL_SMTP_SERVER=smtp.server.com
-            # - BAE_CB_EMAIL_SMTP_PORT=587
+          # ----- Email configuration ------
+          - BAE_CB_EMAIL=charging@email.com
+          # - BAE_CB_EMAIL_USER=user
+          # - BAE_CB_EMAIL_PASS=pass
+          # - BAE_CB_EMAIL_SMTP_SERVER=smtp.server.com
+          # - BAE_CB_EMAIL_SMTP_PORT=587
 
-            - BAE_CB_VERIFY_REQUESTS=True # Whether or not the BAE validates SSL certificates on requests to external components
+          - BAE_CB_VERIFY_REQUESTS=True # Whether or not the BAE validates SSL certificates on requests to external components
 
-            # ----- Site configuration -----
-            - BAE_SERVICE_HOST=http://proxy.docker:8004/ # External URL used to access the BAE
-            - BAE_CB_LOCAL_SITE=http://charging.docker:8006/ # Local URL of the charging backend
+          # ----- Site configuration -----
+          - BAE_SERVICE_HOST=http://proxy.docker:8004/ # External URL used to access the BAE
+          - BAE_CB_LOCAL_SITE=http://charging.docker:8006/ # Local URL of the charging backend
 
-            # ----- APIs Connection config -----
-            - BAE_CB_CATALOG=http://apis.docker:8080/DSProductCatalog
-            - BAE_CB_INVENTORY=http://apis.docker:8080/DSProductInventory
-            - BAE_CB_ORDERING=http://apis.docker:8080/DSProductOrdering
-            - BAE_CB_BILLING=http://apis.docker:8080/DSBillingManagement
-            - BAE_CB_RSS=http://rss.docker:8080/DSRevenueSharing
-            - BAE_CB_USAGE=http://apis.docker:8080/DSUsageManagement
-            - BAE_CB_AUTHORIZE_SERVICE=http://proxy.docker:8004/authorizeService/apiKeys
+          # ----- APIs Conection config -----
+          - BAE_CB_CATALOG=http://apis.docker:8080/DSProductCatalog
+          - BAE_CB_INVENTORY=http://apis.docker:8080/DSProductInventory
+          - BAE_CB_ORDERING=http://apis.docker:8080/DSProductOrdering
+          - BAE_CB_BILLING=http://apis.docker:8080/DSBillingManagement
+          - BAE_CB_RSS=http://rss.docker:8080/DSRevenueSharing
+          - BAE_CB_USAGE=http://apis.docker:8080/DSUsageManagement
+          - BAE_CB_AUTHORIZE_SERVICE=http://proxy.docker:8004/authorizeService/apiKeys
 
-    networks:
-      main:
-        external: true
-
-We should finally get something like this: 
-
-.. image:: ./images/diagrams/themedoc4.png
-   :align: center
-
-To run the containers listed above we have to write these commands in the terminal and we have to repeat this for each folder (except for the proxy which will be handled later): ::
-
-    $ cd <name of the container folder>
-    $ docker compose up -d 
- 
-
-
-Proxy container
-+++++++++++++++
-
-We will keep the same code structure provided under this link so we only need to clone it and the only thing we will change is the docker-compose.yml file under the docker-dev folder and you can copy the following code in it:  ::
-
-    version: '3'
-    services:
       proxy:
-          image: fiware/biz-ecosystem-logic-proxy
-          ports:
-            - 8004:8004
-          networks:
-            main:
-              aliases:
-                - proxy.docker
-          volumes:
-            - ./proxy-indexes:/business-ecosystem-logic-proxy/indexes
-            - ./proxy-themes:/business-ecosystem-logic-proxy/themes
-            - ./proxy-static:/business-ecosystem-logic-proxy/static
-            - ./proxy-locales:/business-ecosystem-logic-proxy/locales
+        image: proxy-dev
+        links:
+          - mongo
+        depends_on:
+          - mongo
+        ports:
+          - 8004:8004
+        networks:
+          main:
+            aliases:
+              - proxy.docker
+        volumes:
+          - ../:/business-ecosystem-logic-proxy
 
-          environment:
-                # ------ OAUTH2 Config ------
-                - BAE_LP_OAUTH2_SERVER=https://marketplace-accounts.fiware.io  # URL of the FIWARE IDM used for user authentication
-                - BAE_LP_OAUTH2_CLIENT_ID=07e5f09b-4a65-41c4-a987-5ef850b5ea32  # OAuth2 Client ID of the BAE applicaiton
-                - BAE_LP_OAUTH2_CALLBACK=http://localhost:8004/auth/fiware/callback  # Callback URL for receiving the access tokens
-                - BAE_LP_OAUTH2_ADMIN_ROLE=admin  # Role defined in the IDM client app for admins of the BAE 
-                - BAE_LP_OAUTH2_SELLER_ROLE=seller  # Role defined in the IDM client app for sellers of the BAE 
-                - BAE_LP_OAUTH2_CUSTOMER_ROLE=customer  # Role defined in the IDM client app for customers of the BAE 
-                - BAE_LP_OAUTH2_ORG_ADMIN_ROLE=orgAdmin  # Role defined in the IDM client app for organization admins of the BAE 
-                - BAE_LP_OAUTH2_IS_LEGACY=false  # Whether the used FIWARE IDM is version 6 or lower
-                - BAE_LP_THEME=i4trust
-                - COLLECT=True
+      apis:
+        image: fiware/biz-ecosystem-apis:v7.6.0
+        #restart: always
+        ports:
+          - 4848:4848
+          - 8080:8080
+        links:
+          - mysql
+        depends_on:
+          - mysql
+        networks:
+          main:
+            aliases:
+              - apis.docker
+        # volumes:
+        #    - ./apis-conf:/etc/default/tmf/  # Used if not configured by environment
+        environment:
+          - BAE_SERVICE_HOST=http://proxy.docker:8004/
+          - MYSQL_ROOT_PASSWORD=my-secret-pw
+          - MYSQL_HOST=mysql
+          - BAE_LP_THEME=i4trust  #theme name has to be put here  
+          - COLLECT=True          # to execute the collect_static.js 
+
+      rss:
+        image: fiware/biz-ecosystem-rss:v7.8.0
+        #restart: always
+        ports:
+          - 9999:8080
+          - 4444:4848
+          - 1111:8181
+        links:
+          - mysql
+        depends_on:
+          - mysql
+        networks:
+          main:
+            aliases:
+              - rss.docker
+        # volumes:
+        #    - ./rss-conf:/etc/default/rss  # Used if not configured by environment
+        environment:
+          - BAE_RSS_DATABASE_URL=jdbc:mysql://mysql:3306/RSS
+          - BAE_RSS_DATABASE_USERNAME=root
+          - BAE_RSS_DATABASE_PASSWORD=my-secret-pw
+          - BAE_RSS_DATABASE_DRIVERCLASSNAME=com.mysql.jdbc.Driver
+          - BAE_RSS_OAUTH_CONFIG_GRANTEDROLE=admin
+          - BAE_RSS_OAUTH_CONFIG_SELLERROLE=seller
+          - BAE_RSS_OAUTH_CONFIG_AGGREGATORROLE=Aggregator
+
     networks:
       main:
         external: true
 
-Then what has to be done is to run the proxy container following these commands in the terminal: ::
-
-    $ cd docker-dev 
-    $ docker-compose up 
- 
-To have an overview of the running containers, install `Docker Desktop <https://www.docker.com/products/docker-desktop>`_.
-This is what we should get when we check Docker Dashboard: 
-
-.. image:: ./images/diagrams/themedoc5.png
-   :align: center
-   :scale: 110%
-
-Additional information
-++++++++++++++++++++++
-
-You can stop the containers with the following command: ::
-
-    docker-compose stop
 
 
-And start them again with: ::
 
-    docker-compose start
+Step 2: pre-configuration of the proxy-dev image 
+++++++++++++++++++++++++++++++++++++++++++++++++
+Our target here is to run the UI with a new theme that we provide. To enable the compilation of this new theme make sure to precise the name of the new theme to be used in the environment variable in our docker-compose file by adding this line: ::
+
+    - BAE_LP_THEME= <theme name>
+
+Here is an example (theme name is i4trust): ::
+
+    environment:
+          - BAE_SERVICE_HOST=http://proxy.docker:8004/
+          - MYSQL_ROOT_PASSWORD=my-secret-pw
+          - MYSQL_HOST=mysql
+          - BAE_LP_THEME=i4trust  #theme name has to be put here
+
+The other thing we should pay attention to is the creation of the static files for the theme, we can do this by adding the following in the environment variables in the proxy-dev image: ::
+
+    - COLLECT=True
+
+And finally we should have something like this: ::
+
+    environment:
+          - BAE_SERVICE_HOST=http://proxy.docker:8004/
+          - MYSQL_ROOT_PASSWORD=my-secret-pw
+          - MYSQL_HOST=mysql
+          - BAE_LP_THEME=i4trust  #theme name has to be put here  
+          - COLLECT=True          # to execute the collect_static.js 
 
 
-Moreover, you can terminate the containers with: ::
+Step 3: building the docker-dev image 
++++++++++++++++++++++++++++++++++++++
 
-    docker-compose down
+The first step for using this container is building it, you can do that with the following command: ::
 
-In addition, the docker-compose is going to create a volume over the main folder of the sources, so you can modify, test or execute the software inside the container. 
-To access to the container execute the following command: ::
+    docker build -t proxy-dev .
+
+Then, you can run the container using the following command: ::
+
+    docker-compose up
+
+Step 4: starting the proxy using the docker-dev image
++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+We can open a shell in the container using the following command: ::
 
     docker exec -ti dockerdev_proxy_1 /bin/bash
 
+Then once we are in the shell we need to execute the following command: ::
 
-At this point we will run the server manually following this command: ::
+    $ node server.js 
 
-    >>> node server.js 
+
+Finally, we will be able to open the Marketplace in the browser `here <http://localhost:8004/>`_.  
+
+
 
 Configuring the Theme
 ---------------------
@@ -809,7 +773,7 @@ and run it again with ::
 
     docker-compose up 
 
-The Marketplace will then be accesiblein the browser `here <http://localhost:8004/>`_.
+The Marketplace will then be accesible in the browser `here <http://localhost:8004/>`_.
 
 -------------------
 Enabling Production
