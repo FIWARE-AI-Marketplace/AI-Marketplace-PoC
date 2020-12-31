@@ -17,6 +17,7 @@ The helm chart with all possible configuration values can be found here:
 Prepare Helm repositories
 ```shell
 helm repo add t3n https://storage.googleapis.com/t3n-helm-charts
+helm repo add elastic https://helm.elastic.co
 helm repo add bitnami https://charts.bitnami.com/bitnami
 helm repo add fiware https://fiware.github.io/helm-charts/
 helm repo update
@@ -40,6 +41,9 @@ that the externally available components will be accessible on the following sub
 
 Install the required databases MongoDB and MySQL. 
 ```shell
+# Deploy elasticsearch
+helm install -f ./values-elastic.yml --namespace $MPNS mp-elasticsearch elastic/elasticsearch --version 7.5.1
+
 # Deploy MySQL:
 helm install -f ./values-mysql.yml --namespace $MPNS mp-mysql t3n/mysql
 
@@ -79,13 +83,17 @@ After finishing the creation of the application, note down the shown OAuth2 Clie
 
 Finally install the Business API Ecosystem. Make sure to setup an Ingress or OpenShift route in the values file for external 
 access of the Marketplace UI (e.g. https://marketplace.domain.org). Furthermore adapt the configuration options for 
-the setup databases and Keyrock instance.
+the databases, elasticsearch and Keyrock instance been setup before.
+
+In this values file you will also find an example on how to enable a PVC for plugin installation in the charging backend
+and theme deployment in the logic proxy. An example of how to build an image for a theme can be
+found [here](https://github.com/FIWARE-AI-Marketplace/bae-i4trust-theme).
 ```shell
 # Deploy BAE FIWARE Helm Chart
 helm install -f ./values-marketplace.yml --namespace $MPNS mp fiware/business-api-ecosystem
 ```
 
-The deployment of all components will take some time. When the logic proxy component has been deployed and the running state, 
+The deployment of all components will take some time. When the logic proxy component has been deployed and changed to the running state, 
 you can access the marketplace UI via the browser (e.g. http://marketplace.domain.org).
 
 Before logging in, you might need to setup some users within Keyrock and assign corresponding roles (e.g. customer or seller).

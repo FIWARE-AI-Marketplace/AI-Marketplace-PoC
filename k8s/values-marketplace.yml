@@ -1,7 +1,7 @@
 # Values for fiware/business-api-ecosystem Helm Chart
 #
 # Chart values file:
-# ref: 
+# ref: https://github.com/FIWARE/helm-charts/blob/main/charts/business-api-ecosystem/values.yaml
 #
 
 
@@ -50,6 +50,17 @@ bizEcosystemRss:
 ## Configuration for biz-ecosystem-charging-backend component
 ##
 bizEcosystemChargingBackend:
+  ## -- PVC configuration for charging backend plugins
+  ## Enable to allow loading plugins from PVC.
+  ## Some plugins require access to IDM, for this Keyrock IDM admin credentials need to be provided.
+  plugins:
+    ## -- Enable the PVC for plugins storage
+    enabled: false
+    ## -- IDM Admin username
+    idmUser: idm-user
+    ## -- IDM Admin password
+    idmPassword: idm-password
+
   ## database configuration for Charging backend (MongoDB)
   db:
     ## host of the database to be used (K8s internal service hostname)
@@ -86,3 +97,25 @@ bizEcosystemLogicProxy:
     user: belp
     # password for connecting the database (MongoDB password of user charging)
     password: belp-password
+
+  ## -- elasticsearch configuration
+  elastic:
+    ## -- indexing engine of logic proxy
+    engine: elasticsearch
+    ## -- URL of elasticsearch service
+    url: elasticsearch-master.marketplace.svc.cluster.local:9200
+    ## -- API version of elasticsearch
+    version: 7.5
+
+  ## -- Custom theme configuration
+  ## This will deploy a theme to a PVC loaded from a separate image
+  theme:
+    ## -- Enable theme
+    enabled: false
+    ## -- Name of the theme
+    name: bae-theme
+    ## Image which holds the theme files
+    image: my/bae-theme:v1.0.0
+    ## Path to the source theme files inside the theme container
+    #  Files will be copied to /themes/{{name}} with the PVC mounted at /themes
+    sourcePath: /bae-theme
