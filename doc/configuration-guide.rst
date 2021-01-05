@@ -21,7 +21,7 @@ setting up the jdbc connection as described in the *Installation and Administrat
 On the other hand, the Docker image biz-ecosystem-apis, which is used to the deploy TMF APIs using Docker, uses two environment
 variables for configuring such connection. ::
 
-    MYSQL_ROOT_PASSWORD=my-secret-pw
+    MYSQL_ROOT_PASSWORD=my-secret-password
     MYSQL_HOST=mysql
 
 Finally, the TMF APIs can optinally use a configuration file called *settings.properties* which is located by default at */etc/default/apis*.
@@ -58,7 +58,7 @@ In addition, database settings can be configured using the environment. In parti
 
     export BAE_RSS_DATABASE_URL=jdbc:mysql://mysql:3306/RSS
     export BAE_RSS_DATABASE_USERNAME=root
-    export BAE_RSS_DATABASE_PASSWORD=my-secret-pw
+    export BAE_RSS_DATABASE_PASSWORD=my-secret-password
     export BAE_RSS_DATABASE_DRIVERCLASSNAME=com.mysql.jdbc.Driver
 
 The file *oauth.properties* contains by default the following fields (It is recommended not to modify them) ::
@@ -495,7 +495,7 @@ PS: This does not require rebuilding the image but it loads all the source files
         networks:
           main:
         environment:
-          - MYSQL_ROOT_PASSWORD=my-secret-pw
+          - MYSQL_ROOT_PASSWORD=my-secret-password
           - MYSQL_DATABASE=RSS
 
       charging:
@@ -588,9 +588,9 @@ PS: This does not require rebuilding the image but it loads all the source files
         #    - ./apis-conf:/etc/default/tmf/  # Used if not configured by environment
         environment:
           - BAE_SERVICE_HOST=http://proxy.docker:8004/
-          - MYSQL_ROOT_PASSWORD=my-secret-pw
+          - MYSQL_ROOT_PASSWORD=my-secret-password
           - MYSQL_HOST=mysql
-          - BAE_LP_THEME=i4trust  #theme name has to be put here  
+          - BAE_LP_THEME=my-new-theme-name  #theme name has to be put here  
           - COLLECT=True          # to execute the collect_static.js 
 
       rss:
@@ -613,7 +613,7 @@ PS: This does not require rebuilding the image but it loads all the source files
         environment:
           - BAE_RSS_DATABASE_URL=jdbc:mysql://mysql:3306/RSS
           - BAE_RSS_DATABASE_USERNAME=root
-          - BAE_RSS_DATABASE_PASSWORD=my-secret-pw
+          - BAE_RSS_DATABASE_PASSWORD=my-secret-password
           - BAE_RSS_DATABASE_DRIVERCLASSNAME=com.mysql.jdbc.Driver
           - BAE_RSS_OAUTH_CONFIG_GRANTEDROLE=admin
           - BAE_RSS_OAUTH_CONFIG_SELLERROLE=seller
@@ -636,9 +636,9 @@ Here is an example (theme name is i4trust): ::
 
     environment:
           - BAE_SERVICE_HOST=http://proxy.docker:8004/
-          - MYSQL_ROOT_PASSWORD=my-secret-pw
+          - MYSQL_ROOT_PASSWORD=my-secret-password
           - MYSQL_HOST=mysql
-          - BAE_LP_THEME=i4trust  #theme name has to be put here
+          - BAE_LP_THEME= my-new-theme-name  #theme name has to be put here
 
 The other thing we should pay attention to is the creation of the static files for the theme, we can do this by adding the following in the environment variables in the proxy-dev image: ::
 
@@ -648,9 +648,9 @@ And finally we should have something like this: ::
 
     environment:
           - BAE_SERVICE_HOST=http://proxy.docker:8004/
-          - MYSQL_ROOT_PASSWORD=my-secret-pw
+          - MYSQL_ROOT_PASSWORD=my-secret-password
           - MYSQL_HOST=mysql
-          - BAE_LP_THEME=i4trust  #theme name has to be put here  
+          - BAE_LP_THEME= my-new-theme-name  #theme name has to be put here  
           - COLLECT=True          # to execute the collect_static.js 
 
 
