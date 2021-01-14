@@ -434,15 +434,31 @@ The Business API Ecosystem provides a basic mechanism for the creation of themes
 or *views* directories of the logic proxy. To do that, themes map the directory structure and include files with the same name of the default ones to be overridden.
 
 To customize the theme of the Business API Ecosystem, the software to look at is the `Business API Ecosystem Logic Proxy <https://github.com/FIWARE-TMForum/business-ecosystem-logic-proxy>`_. 
-There is a defined mechanism for creating themes. The themes are created as a separate package; you can select a name for it and then you provide the different contents and the particular theme to be used. This theme can be configured in the main settings of the business ecosystem, in particular in the config.js file in the theme section. The name of the folder containing the theme has to be specified there. 
+There is a defined mechanism for creating themes. The themes are created as a separate package; you can select a name for it and then you provide the different contents and the particular theme to be used. This theme can be configured in the main settings of the business ecosystem, in particular in the config.js file in the theme section. The name of the folder containing the theme has to be specified there. ::
 
-.. image:: ./images/diagrams/themedoc1.png
-   :align: center
+    //Express Configuration 
+    config.proxyPrefix = '';
+    config.portalPrefix = '';
+    config.logInPath = '/login';
+    config.logOutPath = '/logOut';
+    config.sessionSecret = 'keyboard cat'
+    config.theme = '';
 
-Since we are using Docker, the alternative is to precise the theme folder in the environment variable in the docker-compose.yml file as in the last line of the following image:
+Since we are using Docker, the alternative is to precise the theme folder in the environment variable in the docker-compose.yml file as in the last line of the following code: ::
 
-.. image:: ./images/diagrams/themedoc2.png
-   :align: center
+    # ------ OAUTH2 Config ------
+            - BAE_LP_OAUTH2_SERVER=http://idm.docker:8000  # URL of the FIWARE IDM used for user authentication
+            - BAE_LP_OAUTH2_CLIENT_ID=id  # OAuth2 Client ID of the BAE applicaiton
+            - BAE_LP_OAUTH2_CLIENT_SECRET=secret  # OAuth Client Secret of the BAE application
+            - BAE_LP_OAUTH2_CALLBACK=http://proxy.docker:8004/auth/fiware/callback  # Callback URL for receiving the access tokens
+            - BAE_LP_OAUTH2_ADMIN_ROLE=admin  # Role defined in the IDM client app for admins of the BAE 
+            - BAE_LP_OAUTH2_SELLER_ROLE=seller  # Role defined in the IDM client app for sellers of the BAE 
+            - BAE_LP_OAUTH2_CUSTOMER_ROLE=customer  # Role defined in the IDM client app for customers of the BAE 
+            - BAE_LP_OAUTH2_ORG_ADMIN_ROLE=orgAdmin  # Role defined in the IDM client app for organization admins of the BAE 
+            - BAE_LP_OAUTH2_IS_LEGACY=false  # Whether the used FIWARE IDM is version 6 or lower
+
+            # - BAE_LP_THEME=theme  # If provided custom theme to be used by the web site, it must be included in themes volume
+
 
 Firstly, the BAE instance needs to be run in developer mode so that we can make changes; a docker dev folder enables that. In this docker dev folder we can find the docker-compose.yml file that has the proxy service which is the container of the marketplace front end. 
 The idea of the theme is that we have to provide a folder that maps the same structure of the Business API Ecosystem structure as seen in the image: 
@@ -632,7 +648,7 @@ Our target here is to run the UI with a new theme that we provide. To enable the
 
     - BAE_LP_THEME= <theme name>
 
-Here is an example (theme name is i4trust): ::
+Here is an example: ::
 
     environment:
           - BAE_SERVICE_HOST=http://proxy.docker:8004/
@@ -704,10 +720,21 @@ If we want to make some changes in the theme related to the graphical chart this
 
 PS: we can copy the code from the default-theme.css and edit it. 
 
-To apply the new css file we need to override the **imports.js** file and change the path to the new-theme in the **cssFilesToInject**.
+To apply the new css file we need to override the **imports.js** file shown in the following structure.
 
 .. image:: ./images/diagrams/themedoc8.png
    :align: center
+
+There we change the path to the new-theme in **cssFilesToInject**. ::
+
+    const cssFilesToInject = [
+        'bootstrap-3.3.5/css/bootstrap',
+        'font-awesome-4.5.0/css/font-awesome',
+        'intl-tel-input-8.4.7/css/intlTelInput',
+        'core/css/new-theme'
+    ].map(function(path) {
+        return 'resources/' + path + '.css';
+    });
 
 Changing the logo
 +++++++++++++++++
@@ -717,23 +744,44 @@ The file we have to look at is the **base.jade** so as we did previously since w
 .. image:: ./images/diagrams/themedoc9.png
    :align: center
 
+The path to the desired logo file can be added there ::
+
+     a.navbar-brand.hidden-xs(href="#{ contextPath }")
+       img(src="#{ contextPath }/mypath/images/My_New_Logo_RGB.svg")
+    .navbar-text {{title}}
+
 .. note::
    The logo image must be uploaded under public>resources>core>images
 
 Changing the browser's title bar
 ++++++++++++++++++++++++++++++++
 
-To change the browser’s title bar the file we have to look at is the **base.jade**
+To change the browser’s title bar the file we have to look at is still the **base.jade**
 
-.. image:: ./images/diagrams/themedoc10.png
-   :align: center
+There, in line 4 the new title can be entered: ::
+
+    doctype html
+    html(ng-app="app")
+        head
+            title New Title
 
 Changing the font 
 +++++++++++++++++
-To change the font we can download the font we want and add it under **Public > resources> <new-font-file>**. To apply the new font we need to override the **imports.js** file and change the path to the new-font in the **cssFilesToInject**.
+To change the font we can download the font we want and add it under **Public > resources> <new-font-file>**. 
 
 .. image:: ./images/diagrams/themedoc11.png
    :align: center
+
+To apply the new font we need to override the **imports.js** file and change the path to the new-font in the **cssFilesToInject**. ::
+
+    const cssFilesToInject = [
+        'bootstrap-3.3.5/css/bootstrap',
+        'font-awesome-4.5.0/css/font-awesome',
+        'intl-tel-input-8.4.7/css/intlTelInput',
+        'core/css/KI_MP_theme'
+    ].map(function(path) {
+    return 'resources/' + path + '.css';
+    });
 
 Changing the translation
 ++++++++++++++++++++++++
@@ -760,10 +808,23 @@ We can execute the collect_static.s by adding this line ::
 
      - COLLECT=True  
 
-to the environment var in the docker-compose.yml file under the docker-dev like follows: 
+to the environment var in the docker-compose.yml file under the docker-dev like follows: ::
 
-.. image:: ./images/diagrams/themedoc14.png
-   :align: center
+    environment:
+            # ------ OAUTH2 Config ------
+            - BAE_LP_OAUTH2_SERVER=https://marketplace-accounts.fiware.io  # URL of the FIWARE IDM used for user authentication
+            - BAE_LP_OAUTH2_CLIENT_ID= <client_ID>    # OAuth2 Client ID of the BAE applicaiton
+            - BAE_LP_OAUTH2_CLIENT_SECRET=<client_secret>  # OAuth Client Secret of the BAE application
+            - BAE_LP_OAUTH2_CALLBACK=http://localhost:8004/auth/fiware/callback  # Callback URL for receiving the access tokens
+            - BAE_LP_OAUTH2_ADMIN_ROLE=admin  # Role defined in the IDM client app for admins of the BAE 
+            - BAE_LP_OAUTH2_SELLER_ROLE=seller  # Role defined in the IDM client app for sellers of the BAE 
+            - BAE_LP_OAUTH2_CUSTOMER_ROLE=customer  # Role defined in the IDM client app for customers of the BAE 
+            - BAE_LP_OAUTH2_ORG_ADMIN_ROLE=orgAdmin  # Role defined in the IDM client app for organization admins of the BAE 
+            - BAE_LP_OAUTH2_IS_LEGACY=false  # Whether the used FIWARE IDM is version 6 or lower
+            - BAE_LP_THEME=A_New_theme_folder
+            - COLLECT=True
+
+
 
 To be able to test the changes we make under the docker-dev we have to stop the proxy container by ::
 
