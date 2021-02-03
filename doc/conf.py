@@ -5,20 +5,20 @@ from recommonmark.parser import CommonMarkParser
 
 on_rtd = os.environ.get('READTHEDOCS', None) == 'True'
 
-extensions = []
+extensions = ['sphinx.ext.autosectionlabel']
 templates_path = ['/home/docs/checkouts/readthedocs.org/readthedocs/templates/sphinx', 'templates', '_templates', '.templates']
 source_suffix = ['.rst', '.md']		
 source_parsers = {		
             '.md': CommonMarkParser,		
         }
 master_doc = 'index'
-project = u'biz-ecosystem'
-copyright = u'2016'
+project = u'ai-marketplace-poc'
+copyright = u'2020'
 version = 'latest'
 release = 'latest'
 exclude_patterns = ['_build']
 pygments_style = 'sphinx'
-htmlhelp_basename = 'biz-ecosystem'
+htmlhelp_basename = 'ai-marketplace-poc'
 html_theme = 'sphinx_rtd_theme'
 file_insertion_enabled = False
 latex_documents = [
@@ -32,6 +32,12 @@ if not on_rtd:
     html_theme = 'sphinx_rtd_theme'
     html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
     html_style = 'https://www.fiware.org/style/fiware_readthedocs.css'
+    html_css_files = [
+            'https://media.readthedocs.org/css/sphinx_rtd_theme.css',
+            'https://media.readthedocs.org/css/readthedocs-doc-embed.css',
+            'https://www.fiware.org/style/fiware_readthedocs.css',
+            'https://www.fiware.org/style/fiware_readthedocs_publication.css',
+        ]
 else:
     html_context = { 
         'css_files': [
@@ -41,3 +47,4 @@ else:
             'https://www.fiware.org/style/fiware_readthedocs_publication.css',
         ],  
     }
+

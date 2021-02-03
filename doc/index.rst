@@ -43,11 +43,17 @@ Index
 :doc:`docker-guide`
   The guide for maintainers that explains how to use Docker for deploying it
 
+:doc:`kubernetes-guide`
+  The guide for maintainers that explains how to use Kubernetes and Helm for deploying it
+
 :doc:`configuration-guide`
   The guide for administrations which explains the different configuration options
 
 :doc:`user-guide`
-  The guide for users that explains how to use it.
+  The guide for users that explains general usage.
+
+:doc:`user-guide-cases/index`
+  User guides for specific use cases.
 
 :doc:`programmer-guide`
   The guide for programmers that explains how to develop plugins
@@ -61,9 +67,12 @@ Index
     :maxdepth: 2
     :caption: Documentation
 
+    self
     installation-administration-guide
     docker-guide
+    kubernetes-guide
     configuration-guide
     user-guide
+    user-guide-cases/index
     programmer-guide
     plugins-guide

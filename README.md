@@ -1,13 +1,30 @@
-# Business API Ecosystem
+# AI Marketplace Proof-of-Concept
 
 [![](https://nexus.lab.fiware.org/repository/raw/public/badges/chapters/data-monetization.svg)](https://www.fiware.org/developers/catalogue/)
 [![License badge](https://img.shields.io/github/license/FIWARE-TMForum/Business-API-Ecosystem.svg)](https://opensource.org/licenses/AGPL-3.0)
-[![Docker](https://img.shields.io/docker/pulls/fiware/business-api-ecosystem.svg)](https://hub.docker.com/r/fiware/business-api-ecosystem)
 [![](https://img.shields.io/badge/tag-fiware-orange.svg?logo=stackoverflow)](http://stackoverflow.com/questions/tagged/fiware)
 [![Support](https://img.shields.io/badge/support-askbot-yellowgreen.svg)](https://ask.fiware.org)
 <br>
-[![Documentation badge](https://img.shields.io/readthedocs/business-api-ecosystem.svg)](https://business-api-ecosystem.rtfd.io)
-![Status](https://nexus.lab.fiware.org/static/badges/statuses/business-api.svg)
+[![Documentation badge](https://img.shields.io/readthedocs/fiware-ai-marketplace-poc.svg)](https://fiware-ai-marketplace-poc.rtfd.io)
+
+ | :books: [Documentation](https://fiware-ai-marketplace-poc.rtfd.io/)  |---|---|---|
+|---|---|---|---|
+
+This repository contains information about a proof-of-concept for the AI Marketplace project. Provided are the documentation,
+scripts for deployment and implementations of the required plugins.
+
+This proof-of-concept is based on the FIWARE Business API Ecosystem which will be described below.
+
+
+### PoC Contents
+
+- [Business API Ecosystem](#business-api-ecosystem)
+- [PoC Extensions](#poc-extensions)
+- [Building documentation locally](#building-documentation-locally)
+
+
+
+## Business API Ecosystem
 
 The Business API Ecosystem provides sellers the means for managing, publishing,
 and generating revenue of their products, apps, data, and services. The Business
@@ -19,10 +36,11 @@ This project is part of [FIWARE](https://www.fiware.org/). For more information
 check the FIWARE Catalogue entry for
 [Data Publication and Monetization](https://github.com/Fiware/catalogue/tree/master/data-publication).
 
- | :books: [Documentation](https://business-api-ecosystem.rtfd.io/)  | :mortar_board: [Academy](https://fiware-academy.readthedocs.io/en/latest/data-publication/business-api) | :whale: [Docker Hub](https://hub.docker.com/r/fiware/business-api-ecosystem) |  :dart: [Roadmap](https://github.com/FIWARE-TMForum/Business-API-Ecosystem/blob/master/roadmap.md)|
+| :books: [Documentation](https://business-api-ecosystem.rtfd.io/)  | :mortar_board: [Academy](https://fiware-academy.readthedocs.io/en/latest/data-publication/business-api) | :whale: [Docker Hub](https://hub.docker.com/r/fiware/business-api-ecosystem) |  :dart: [Roadmap](https://github.com/FIWARE-TMForum/Business-API-Ecosystem/blob/master/roadmap.md)|
 |---|---|---|---|
 
-## Contents
+
+### Contents
 
 -   [Background](#background)
     -   [Description](#description)
@@ -34,7 +52,7 @@ check the FIWARE Catalogue entry for
 -   [Quality Assurance](#quality-assurance)
 -   [License](#license)
 
-## Background
+### Background
 
 This is the main repository of the Business API Ecosystem. This project is part
 of [FIWARE](https://www.fiware.org), and has been developed in collaboration
@@ -77,7 +95,7 @@ or provide it directly to the components using the
 or
 [Logic Proxy Issues](https://github.com/FIWARE-TMForum/business-ecosystem-logic-proxy/issues/new).
 
-### Description
+#### Description
 
 The Business API Ecosystem is a joint component made up of the FIWARE Business
 Framework and a set of APIs (and its reference implementations) provided by the
@@ -89,7 +107,7 @@ standard APIs; concretely, it includes the catalog management, ordering
 management, inventory management, usage management, billing, customer, and party
 APIs.
 
-## Install
+### Install
 
 The instructions to install the Business API Ecosystem can be found at the
 [Installation Guide](http://business-api-ecosystem.readthedocs.io/en/latest/installation-administration-guide.html).
@@ -100,12 +118,12 @@ You can install the software in three different ways:
     [Docker Container](https://hub.docker.com/r/fiware/business-api-ecosystem)
 -   Manually
 
-## Usage
+### Usage
 
 The Business API Ecosystem API is build up using the APIs of the different
 components each exposing its own resources.
 
-### Catalog API
+#### Catalog API
 
 The Catalog API is available under /DSProductCatalog/api/ and its main resources
 are:
@@ -115,21 +133,21 @@ are:
 -   Product Specifications
 -   Product Offerings
 
-### Ordering API
+#### Ordering API
 
 The Ordering API is available under /DSProductOrdering/api/ and its main
 resources are:
 
 -   Product Order
 
-### Inventory API
+#### Inventory API
 
 The Inventory API is available under /DSProductInventory/api/ and its main
 resources are:
 
 -   Product
 
-### Party API
+#### Party API
 
 The Party API is available under /DSPartyManagement/api/ and its main resources
 are:
@@ -137,7 +155,7 @@ are:
 -   Individual
 -   Organization
 
-### Customer API
+#### Customer API
 
 The Customer API is available under /DSCustomerManagement/api/ and its main
 resources are:
@@ -145,7 +163,7 @@ resources are:
 -   Customer
 -   Customer Account
 
-### Billing API
+#### Billing API
 
 The Billing API is available under /DSBillingManagement/api/ and its main
 resources are:
@@ -153,7 +171,7 @@ resources are:
 -   Billing Account
 -   Applied Billing Charge
 
-### Usage API
+#### Usage API
 
 The Usage API is available under /DSUsageManagement/api/ and its main resources
 are:
@@ -161,7 +179,7 @@ are:
 -   Usage
 -   Usage Specification
 
-### RSS API
+#### RSS API
 
 The RSS API is available under /DSRevenueSharing/rss/ and its main resources
 are:
@@ -170,35 +188,36 @@ are:
 -   Transaction
 -   Revenue Sharing Report
 
-## API
+### API
 
 For further documentation, you can check the API Reference available at:
 
 -   [Apiary](http://docs.fiwaretmfbizecosystem.apiary.io)
 -   [Github Pages](https://fiware-tmforum.github.io/Business-API-Ecosystem/)
 
-## Testing
+### Testing
 
-### End-to-End tests
+#### End-to-End tests
 
 End-to-End tests are described in the
 [Installation Guide](http://business-api-ecosystem.readthedocs.io/en/latest/installation-administration-guide.html#end-to-end-testing)
 
-### Unit tests
+#### Unit tests
 
 The way of executing the unit tests is described in each of the components
 repositories
 
-## Advanced Topics
+### Advanced Topics
 
 -   [User Guide](doc/user-guide.rst)
 -   [Programmer Guide](doc/programmer-guide.rst)
 -   [Installation & Administration Guide](doc/installation-administration-guide.rst)
 
 You can also find this documentation on
-[ReadTheDocs](http://business-api-ecosystem.readthedocs.io)
+[ReadTheDocs](https://business-api-ecosystem.rtfd.io/)
 
-## Quality Assurance
+
+### Quality Assurance
 
 This project is part of [FIWARE](https://fiware.org/) and has been rated as
 follows:
@@ -219,12 +238,12 @@ follows:
 
 ---
 
-## License
+### License
 
 Business-API-Ecosystem is licensed under [Affero General Public License (GPL)
 version 3](./LICENSE).
 
-### Are there any legal issues with AGPL 3.0? Is it safe for me to use?
+#### Are there any legal issues with AGPL 3.0? Is it safe for me to use?
 
 There is absolutely no problem in using a product licensed under AGPL 3.0. Issues with GPL 
 (or AGPL) licenses are mostly related with the fact that different people assign different 
@@ -240,3 +259,46 @@ wish to make a clarifying public statement as follows:
 > work of the product. Software that merely uses or aggregates (i.e. links to) an otherwise 
 > unmodified version of existing software is not considered a derivative work, and therefore
 > it does not need to be released as under the same license, or even released as open source.
+
+
+
+
+## PoC Extensions
+
+TODO:
+
+Information about changes to the BAE for this PoC, e.g. how and which plugins to install, etc...
+
+
+
+## Building documentation locally
+
+Assuming that `Python3` and `pip3` are installed, you first need to install the
+following modules:
+```shell
+pip3 install sphinx recommonmark sphinx_rtd_theme
+```
+
+Now enter the documentation directory and run the build command specifying the
+output directory. Per default it will generate HTML output.
+```shell
+cd doc/
+sphinx-build . _build
+```
+
+To view the locally built documentation, either open the `_build/index.html` file
+in your browser, or start a local HTTP server:
+```shell
+cd _build/
+python3 -m http.server
+```
+The documentation will then be accesible on [http://localhost:8000](http://localhost:8000).
+
+You can also find the documentation on the PoC on 
+[ReadTheDocs](http://fiware-ai-marketplace-poc.readthedocs.io)
+
+
+
+
+
+
