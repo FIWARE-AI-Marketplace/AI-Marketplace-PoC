@@ -1,8 +1,7 @@
 NGSI-LD based data service hosted at provider
 ==============================================
 
-This use case depicts the usage guide for providing a NGSI-LD based data service hosted
-on the provider environment. The use case depicted consists of the following scenario.
+This use case depicts the usage guide for providing a NGSI-LD based data service hosted on the provider environment. The use case depicted consists of the following scenario.
 
 “Farmer Inc.” owns land and operates several weather measurement stations on its parcels. Weather measurement data are stored as entity of type WeatherObserved on Context Broker. “Farmer Inc.” wants to monetise data and therefore offers data service on marketplace.
 
@@ -43,13 +42,18 @@ The lifecycle of the data service offered and consumed on the market place consi
 In the following two sections, the steps for both the seller and the customer are explaines. Please note that for the execution of theese steps, it is assumed that the executeing party has the following components as instances:
 
 * `Context Broker <https://fiware-orion.readthedocs.io/en/master/admin/install/index.html>`_
-* `Keyrock IdM <https://fiware-ai-marketplace-poc.readthedocs.io/en/dev/kubernetes-guide.html#idm>`_ 
+* `Keyrock IdM <https://fiware-ai-marketplace-poc.readthedocs.io/en/dev/kubernetes-guide.html#idm>`_
 * `API umbrella <https://github.com/apinf/apinf-umbrella>`_
+
+
+Furthermore, the asset to be installed in the charging backend of the marketplace for this use case is a specific version (in a specific branch) of the 
+`NGSILD Query plugin <https://github.com/Ficodes/bae-ngsild-query/tree/i4trust>`_ . 
+For the plugin itself, please refer to the `Installing Asset Plugins <https://fiware-ai-marketplace-poc.readthedocs.io/en/dev/plugins-guide.html#installing-asset-plugins>`_ section.
 
 
 Seller
 -----------------
-
+One more prerequisite that needs to be on the provider side (as depicted in the architecture diagram) would be the `activation service component <https://github.com/FIWARE-AI-Marketplace/bae-activation-service>`_.
 F wants to create an offer for the weather measurement data service on Marketplace M. To do so, F opens the Marketplace M, creates a new offer and provides at least the following information:
 
 * Service URL/Path
