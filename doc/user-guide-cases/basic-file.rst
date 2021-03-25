@@ -75,7 +75,7 @@ In step 4 you can choose the catalog you want your offering to be found in.
 .. image:: ../images/diagrams/basicfile_selleroff4.png
    :align: center
 
-In step 8 you can define a price plan and in step 8 a revenue sharing model. You can either create a new one or choose the existing one which gives the seller/ provider 70% of the profit and the platform 30%.
+In step 8 you can define a price plan and in step 9 a revenue sharing model. You can either create a new one or choose the existing one which gives the seller/ provider 70% of the profit and the platform 30%.
 
 .. image:: ../images/diagrams/basicfile_selleroff5.png
    :align: center
