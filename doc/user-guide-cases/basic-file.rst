@@ -31,6 +31,11 @@ Unless what you are creating is a bundle of product specifications, keep the bun
 .. image:: ../images/diagrams/basicfile_seller3.png
    :align: center
 
+In step 3, choose the digital asset type "Basic File" and simply upload a file.
+
+.. image:: ../images/diagrams/basicfile_seller33.png
+   :align: center
+
 In step 5 of the process, you can add a picture representing your offering either through a URL or through uploading a picture from your computer.
 
 
